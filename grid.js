@@ -1,4 +1,4 @@
-const SIZE = 3;
+const SIZE = 9;
 let Grid;
 let val  = 0;
 
@@ -9,27 +9,18 @@ $(document).ready(function() {
 
 function setUpGrid() {
     for (let i = 0; i < SIZE; i++) {
-        for (let j = 0; j < SIZE; j++) {
-            let $cell = $("<button>", { class: "cell", id: "cell-" + i + "-" + j });
+            let $cell = $("<button>", { class: "cell", id: "cell-" + i});
             $(".Grid").append($cell);
-            $("#cell-" + i + "-" + j).append($("<p>"));
-        }
+            $("#cell-" + i).append($("<p>"));
     }
-
-    Grid = new Array(SIZE);
-
-    for (let i = 0; i < SIZE; i++) {
-        Grid[i] = new Array(SIZE).fill(-1);
-    }  
+    Grid = new Array(SIZE).fill(-1);
 }
 
 function play() {
     for (let i = 0; i < SIZE; i++) {
-        for (let j = 0; j < SIZE; j++) {
-            $("#cell-" + i + "-" + j).click(() => {
-                update(i, j);
-            });
-        }
+        $("#cell-" + i).click(() => {
+            update(i);
+        });        
     }
     
 }
@@ -45,14 +36,14 @@ const win = [
     [2, 4, 6],
 ];
 
-function update(i, j) {
-    if(Grid[i][j] !== -1) return;
-    Grid[i][j] = val++ % 2;
-    if(Grid[i][j] === 1){
-             $("#cell-" + i + "-" + j + " p").text("O");
+function update(i) {
+    if(Grid[i] !== -1) return;
+    Grid[i] = val++ % 2;
+    if(Grid[i] === 1){
+             $("#cell-" + i + " p").text("O");
     } else 
-    if(Grid[i][j] === 0) {
-            $("#cell-" + i + "-" + j + " p").text("X");
+    if(Grid[i] === 0) {
+            $("#cell-" + i + " p").text("X");
     }
     let winner  = ckeckWinner();
     if( winner != -1){ 
@@ -65,17 +56,12 @@ function update(i, j) {
 function ckeckWinner() {
     for(let w of win) {
         const [a, b, c] = w;
-        if(Grid[Math.floor(a / SIZE)][a % SIZE] === Grid[Math.floor(b / SIZE)][b % SIZE]
-            && 
-           Grid[Math.floor(a / SIZE)][a % SIZE] === Grid[Math.floor(c / SIZE)][c % SIZE]
-           &&
-           Grid[Math.floor(a / SIZE)][a % SIZE] !== -1){
-            return Grid[Math.floor(a / SIZE)][a % SIZE];
+        if(Grid[a] === Grid[b] && Grid[a] === Grid[c] && Grid[a] !== -1){
+            return Grid[a];
         }
     }
     return -1;
 }
-
 
 $("#reset").click(() => {
         $("#title").text("TIC TAC TOE");
